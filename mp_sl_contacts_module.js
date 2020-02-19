@@ -6,8 +6,8 @@
  *
  * Remarks: New Address Module        
  * 
- * @Last Modified by:   ankith.ravindran
- * @Last Modified time: 2019-05-07 10:27:19
+ * @Last Modified by:   Ankith
+ * @Last Modified time: 2020-02-20 08:32:39
  *
  */
 
@@ -106,7 +106,7 @@ function contacts_creation(request, response) {
         inlineQty += '<div class="row">'
 
         inlineQty += '<div class="col-xs-6 email_section"><div class="input-group"><span class="input-group-addon">EMAIL <span class="mandatory">*</span></span><input type="email" id="email" class="form-control " /></div></div>';
-        inlineQty += '<div class="col-xs-4 phone_section"><div class="input-group"><span class="input-group-addon">PHONE </span><input type="number" id="phone" class="form-control " /></div></div>';
+        inlineQty += '<div class="col-xs-4 phone_section"><div class="input-group"><span class="input-group-addon">PHONE <span class="mandatory">*</span></span><input type="number" id="phone" class="form-control " /></div></div>';
 
         inlineQty += '</div>';
         inlineQty += '</div>';
