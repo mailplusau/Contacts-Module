@@ -7,7 +7,7 @@
  * Remarks: New Address Module        
  * 
  * @Last Modified by:   Ankith
- * @Last Modified time: 2020-02-20 08:32:39
+ * @Last Modified time: 2020-04-08 10:11:38
  *
  */
 
@@ -67,7 +67,7 @@ function contacts_creation(request, response) {
         var searched_contact = nlapiLoadSearch('contact', 'customsearch_salesp_contacts');
 
         var newFilters_contact = new Array();
-        newFilters_contact[newFilters_contact.length] = new nlobjSearchFilter('company', null, 'is', params.custid);
+        newFilters_contact[newFilters_contact.length] = new nlobjSearchFilter('internalid', 'CUSTOMER', 'is', params.custid);
         newFilters_contact[newFilters_contact.length] = new nlobjSearchFilter('isinactive', null, 'is', 'F');
 
         searched_contact.addFilters(newFilters_contact);
