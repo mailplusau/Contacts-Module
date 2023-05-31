@@ -2,10 +2,10 @@
  * @NApiVersion 2.x
  * @NScriptType ClientScript
  * Author:               Ankith Ravindran
- * Created on:           Fri Apr 11 2023
- * Modified on:          Fri Apr 14 2023 11:39:43
+ * Created on:           Fri May 30 2023
+ * Modified on:          Wed May 31 2023 14:23:11
  * SuiteScript Version:  2.0 
- * Description:          Client script for the Page that lists customres that have requested cancellation  
+ * Description:          Client script for List the contacts that has been registered via the webform to get access to the customer portal.
  *
  * Copyright (c) 2023 MailPlus Pty. Ltd.
  */

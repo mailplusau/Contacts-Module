@@ -2,13 +2,14 @@
  * @NApiVersion 2.0
  * @NScriptType Suitelet
  * Author:               Ankith Ravindran
- * Created on:           Fri Apr 14 2023
- * Modified on:          Fri Apr 14 2023 11:36:14
+ * Created on:           Fri May 30 2023
+ * Modified on:          Wed May 31 2023 14:23:11
  * SuiteScript Version:  2.0
- * Description:          Page that lists customres that have requested cancellation 
+ * Description:          List the contacts that has been registered via the webform to get access to the customer portal.
  *
  * Copyright (c) 2023 MailPlus Pty. Ltd.
  */
+
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/https', 'N/log', 'N/redirect', 'N/url', 'N/format'],
     function (ui, email, runtime, search, record, https, log, redirect, url, format) {
@@ -151,7 +152,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
                 inlineHtml += '</div>';
                 inlineHtml += '</div>';
-               
+
 
                 inlineHtml += dataTable('customer_contact_list');
                 inlineHtml += '</div>';
