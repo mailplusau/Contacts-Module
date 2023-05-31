@@ -62,7 +62,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
 
                 var inlineHtml =
-                    '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.mandatory{color:red;} .body{background-color: #CFE0CE !important;}.wrapper{position:fixed;height:2em;width:2em;overflow:show;margin:auto;top:0;left:0;bottom:0;right:0;justify-content: center; align-items: center; display: -webkit-inline-box;} .ball{width: 22px; height: 22px; border-radius: 11px; margin: 0 10px; animation: 2s bounce ease infinite;} .blue{background-color: #0f3d39; }.red{background-color: #095C7B; animation-delay: .25s;}.yellow{background-color: #387081; animation-delay: .5s}.green{background-color: #d0e0cf; animation-delay: .75s}@keyframes bounce{50%{transform: translateY(25px);}}</style > ';
+                    '<script src="https://kit.fontawesome.com/caf4687b4b.js" crossorigin="anonymous"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><style>.mandatory{color:red;} .body{background-color: #CFE0CE !important;}.wrapper{position:fixed;height:2em;width:2em;overflow:show;margin:auto;top:0;left:0;bottom:0;right:0;justify-content: center; align-items: center; display: -webkit-inline-box;} .ball{width: 22px; height: 22px; border-radius: 11px; margin: 0 10px; animation: 2s bounce ease infinite;} .blue{background-color: #0f3d39; }.red{background-color: #095C7B; animation-delay: .25s;}.yellow{background-color: #387081; animation-delay: .5s}.green{background-color: #d0e0cf; animation-delay: .75s}@keyframes bounce{50%{transform: translateY(25px);}}.trending {animation: trending 2s infinite cubic-bezier(0.99, -0.1, 0.01, 1.02); stroke-dashoffset: 100;stroke-dasharray: 100;}@keyframes trending {100% {stroke-dashoffset: 0;}}.tooltip .tooltiptext{visibility:hidden;width:120px;background-color:#000;color:#fff;text-align:center;border-radius:6px;padding:5px 0;position:absolute;z-index:1}.tooltip:hover .tooltiptext{visibility:visible}.tooltip .tooltiptext::after {content: " ";position: absolute;top: 100%; /* At the bottom of the tooltip */left: 50%;margin-left: -5px;border-width: 5px;border-style: solid;border-color: black transparent transparent transparent;}</style > ';
 
                 form.addField({
                     id: 'custpage_table_csv',
@@ -123,12 +123,35 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 //Loading Section that gets displayed when the page is being loaded
                 inlineHtml += loadingSection();
                 if (role == 3 || role == 1032) {
-                    inlineHtml += '<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;"><p><b><u>Action Buttons</u></b><ol><li><b>CREATE PASSWORD EMAIL SENT</b>: Click button when create password email has been sent to the contact.</li><li><b>ACCOUNT ACTIVATED</b>: Click button when the contact has created the password and account has been activated. </li><li><b>NO USAGE</b>: No usage from the time the contact has been created.</li><li><b>VIEW USAGE - (NO MANUAL BARCODES)</b>: Manual Barcodes have not been used from the time the contact has been created. </li><li><b>VIEW USAGE - (MANUAL BARCODES USED)</b>: Manual Barcodes have been used from the time the contact has been created. </li></ol></p></div></br>'
+                    inlineHtml += '<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p><b><u>Action Buttons</u></b><ol><li><b>CREATE PASSWORD EMAIL SENT</b>: Click button when create password email has been sent to the contact.</li><li><b>ACCOUNT ACTIVATED</b>: Click button when the contact has created the password and account has been activated. </li></ol></p><p><b><u>STATUS</u></b><ol><li><b>EMPTY</b>: No Account has been created.</li><li><b>NO USAGE</b>: No usage from the time the contact has been created.</li><li><b>NO MANUAL BARCODES</b>: Manual Barcodes have not been used from the time the contact has been created. </li><li><b>MANUAL BARCODES USED</b>: Manual Barcodes have been used from the time the contact has been created. </li></ol></p></div></br>'
                 } else {
-                    inlineHtml += '<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;"><p><b><u>Buttons</u></b><ol><li><b>NO USAGE</b>: No usage from the time the contact has been created.</li><li><b>VIEW USAGE - (NO MANUAL BARCODES)</b>: Manual Barcodes have not been used from the time the contact has been created. </li><li><b>VIEW USAGE - (MANUAL BARCODES USED)</b>: Manual Barcodes have been used from the time the contact has been created. </li></ol></p></div></br>'
+                    inlineHtml += '<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p><b><u>STATUS</u></b><ol><li><b>EMPTY</b>: No Account has been created.</li><li><b>NO USAGE</b>: No usage from the time the contact has been created.</li><li><b>NO MANUAL BARCODES</b>: Manual Barcodes have not been used from the time the contact has been created. </li><li><b>MANUAL BARCODES USED</b>: Manual Barcodes have been used from the time the contact has been created. </li></ol></p></div></br>'
                 }
 
+                //Search: SMC - Franchisees
+                var searchZees = search.load({
+                    id: 'customsearch_smc_franchisee'
+                });
+                var resultSetZees = searchZees.run();
+
                 inlineHtml += '<div id="container">'
+                inlineHtml += franchiseeDropdownSection(resultSetZees, context);
+
+                inlineHtml +=
+                    '<div class="form-group container filter_buttons_section hide">';
+                inlineHtml += '<div class="row">';
+                inlineHtml +=
+                    '<div class="col-xs-2"></div>'
+                inlineHtml +=
+                    '<div class="col-xs-4"><input type="button" value="APPLY FILTER" class="form-control btn btn-primary" id="applyFilter" style="background-color: #095C7B;" /></div>'
+                inlineHtml +=
+                    '<div class="col-xs-4"><input type="button" value="CLEAR FILTER" class="form-control btn btn-primary" id="clearFilter" style="background-color: #F0AECB; color: #103d39;" /></div>'
+                inlineHtml +=
+                    '<div class="col-xs-2"></div>'
+
+                inlineHtml += '</div>';
+                inlineHtml += '</div>';
+               
 
                 inlineHtml += dataTable('customer_contact_list');
                 inlineHtml += '</div>';
@@ -149,6 +172,50 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
         }
 
         /**
+ * The Franchisee dropdown field.
+ * @param   {zeeSearchResult}    resultSetZees
+ * @return  {String}    `inlineHtml`
+ */
+        function franchiseeDropdownSection(resultSetZees, context) {
+            var inlineHtml =
+                '<div class="form-group container zee_label_section hide">';
+            inlineHtml += '<div class="row">';
+            inlineHtml +=
+                '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #095C7B;">FRANCHISEE</span></h4></div>';
+            inlineHtml += '</div>';
+            inlineHtml += '</div>';
+
+            inlineHtml += '<div class="form-group container zee_dropdown_section hide">';
+            inlineHtml += '<div class="row">';
+            // Period dropdown field
+            inlineHtml += '<div class="col-xs-12 zee_dropdown_div">';
+            inlineHtml += '<div class="input-group">';
+            inlineHtml +=
+                '<span class="input-group-addon" id="zee_dropdown_text">Franchisee</span>';
+            inlineHtml += '<select id="zee_dropdown" class="form-control">';
+            inlineHtml += '<option value=""></option>'
+            resultSetZees.each(function (searchResult_zee) {
+                zee_id = searchResult_zee.getValue('internalid');
+                zee_name = searchResult_zee.getValue('companyname');
+
+                if (zee == zee_id) {
+                    inlineHtml += '<option value="' + zee_id +
+                        '" selected="selected">' + zee_name + '</option>';
+                } else {
+                    inlineHtml += '<option value="' + zee_id + '">' + zee_name +
+                        '</option>';
+                }
+
+                return true;
+            });
+            inlineHtml += '</select>';
+            inlineHtml += '</div></div></div></div>';
+
+            return inlineHtml;
+
+        }
+
+        /**
          * The table that will display the differents invoices linked to the
          * franchisee and the time period.
          *
@@ -159,7 +226,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 name +
                 ' {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#mpexusage-' +
                 name +
-                ' th{text-align: center;vertical-align: middle;} .bolded{font-weight: bold;}</style>';
+                ' th{text-align: center;vertical-align: middle;} .bolded{font-weight: bold;} </style>';
             inlineHtml += '<div class="table_section hide"><table id="mpexusage-' +
                 name +
                 '" class="table table-responsive table-striped customer tablesorter cell-border compact" style="width: 100%;">';
