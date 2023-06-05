@@ -11,8 +11,8 @@
  */
 
 
-define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/https', 'N/log', 'N/redirect', 'N/url', 'N/format'],
-    function (ui, email, runtime, search, record, https, log, redirect, url, format) {
+define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/https', 'N/log', 'N/redirect', 'N/url', 'N/format', 'N/task'],
+    function (ui, email, runtime, search, record, https, log, redirect, url, format, task) {
         var role = 0;
         var userId = 0;
         var zee = 0;
@@ -63,7 +63,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
 
                 var inlineHtml =
-                    '<script src="https://kit.fontawesome.com/caf4687b4b.js" crossorigin="anonymous"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><style>.mandatory{color:red;} .body{background-color: #CFE0CE !important;}.wrapper{position:fixed;height:2em;width:2em;overflow:show;margin:auto;top:0;left:0;bottom:0;right:0;justify-content: center; align-items: center; display: -webkit-inline-box;} .ball{width: 22px; height: 22px; border-radius: 11px; margin: 0 10px; animation: 2s bounce ease infinite;} .blue{background-color: #0f3d39; }.red{background-color: #095C7B; animation-delay: .25s;}.yellow{background-color: #387081; animation-delay: .5s}.green{background-color: #d0e0cf; animation-delay: .75s}@keyframes bounce{50%{transform: translateY(25px);}}.trending {animation: trending 2s infinite cubic-bezier(0.99, -0.1, 0.01, 1.02); stroke-dashoffset: 100;stroke-dasharray: 100;}@keyframes trending {100% {stroke-dashoffset: 0;}}.tooltip .tooltiptext{visibility:hidden;width:120px;background-color:#000;color:#fff;text-align:center;border-radius:6px;padding:5px 0;position:absolute;z-index:1}.tooltip:hover .tooltiptext{visibility:visible}.tooltip .tooltiptext::after {content: " ";position: absolute;top: 100%; /* At the bottom of the tooltip */left: 50%;margin-left: -5px;border-width: 5px;border-style: solid;border-color: black transparent transparent transparent;}</style > ';
+                    '<script src="https://kit.fontawesome.com/caf4687b4b.js" crossorigin="anonymous"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><style>.mandatory{color:red;} .body{background-color: #CFE0CE !important;}.wrapper{position:fixed;height:2em;width:2em;overflow:show;margin:auto;top:0;left:0;bottom:0;right:0;justify-content: center; align-items: center; display: -webkit-inline-box;} .ball{width: 22px; height: 22px; border-radius: 11px; margin: 0 10px; animation: 2s bounce ease infinite;} .blue{background-color: #0f3d39; }.red{background-color: #095C7B; animation-delay: .25s;}.yellow{background-color: #387081; animation-delay: .5s}.green{background-color: #d0e0cf; animation-delay: .75s}@keyframes bounce{50%{transform: translateY(25px);}}.trending {animation: trending 2s infinite cubic-bezier(0.99, -0.1, 0.01, 1.02); stroke-dashoffset: 100;stroke-dasharray: 100;}@keyframes trending {100% {stroke-dashoffset: 0;}}.tooltip .tooltiptext{visibility:hidden;width:120px;background-color:#000;color:#fff;text-align:center;border-radius:6px;padding:5px 0;position:absolute;z-index:1}.tooltip:hover .tooltiptext{visibility:visible}.tooltip .tooltiptext::after {content: " ";position: absolute;top: 100%; /* At the bottom of the tooltip */left: 50%;margin-left: -5px;border-width: 5px;border-style: solid;border-color: black transparent transparent transparent;}.button-shadow{box-shadow:5.5px 4.2px 5.9px rgba(0,0,0,.198),18.3px 14.1px 19.9px rgba(0,0,0,.292),82px 63px 89px rgba(0,0,0,.49)}button{font-family:inherit;background: transparent;color:#095C7B;padding:.7em 1em .7em .9em;display:inline-flex;align-items:center;border:none;border-radius:16px;overflow:hidden;transition:.2s}button span{display:block;margin-left:.3em;transition:.3s ease-in-out}button svg{display:block;transform-origin:center center;transition:transform .3s ease-in-out}button:hover .svg-wrapper{animation:.6s ease-in-out infinite alternate fly-1}button:hover svg{transform:translateX(1.2em) rotate(45deg) scale(1.1)}button:hover span{transform:translateX(5em)}button:active{transform:scale(.95)}@keyframes fly-1{from{transform:translateY(.1em)}to{transform:translateY(-.1em)}}</style > ';
 
                 form.addField({
                     id: 'custpage_table_csv',
@@ -98,7 +98,31 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 })
 
                 form.addField({
+                    id: 'custpage_contact_fname',
+                    type: ui.FieldType.TEXT,
+                    label: 'Table CSV'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                })
+
+                form.addField({
+                    id: 'custpage_contact_lname',
+                    type: ui.FieldType.TEXT,
+                    label: 'Table CSV'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                })
+
+                form.addField({
                     id: 'custpage_contact_email',
+                    type: ui.FieldType.TEXT,
+                    label: 'Table CSV'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                })
+
+                form.addField({
+                    id: 'custpage_contact_phone',
                     type: ui.FieldType.TEXT,
                     label: 'Table CSV'
                 }).updateDisplayType({
@@ -124,9 +148,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 //Loading Section that gets displayed when the page is being loaded
                 inlineHtml += loadingSection();
                 if (role == 3 || role == 1032) {
-                    inlineHtml += '<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p><b><u>Action Buttons</u></b><ol><li><b>CREATE PASSWORD EMAIL SENT</b>: Click button when create password email has been sent to the contact.</li><li><b>ACCOUNT ACTIVATED</b>: Click button when the contact has created the password and account has been activated. </li></ol></p><p><b><u>STATUS</u></b><ol><li><b>EMPTY</b>: No Account has been created.</li><li><b>NO USAGE</b>: No usage from the time the contact has been created.</li><li><b>NO MANUAL BARCODES</b>: Manual Barcodes have not been used from the time the contact has been created. </li><li><b>MANUAL BARCODES USED</b>: Manual Barcodes have been used from the time the contact has been created. </li></ol></p></div></br>'
+                    inlineHtml += '<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p><b><u>Action Buttons</u></b><ol><li><b>CREATE PASSWORD EMAIL SENT</b>: Click button when create password email has been sent to the contact.</li><li><b>ACCOUNT ACTIVATED</b>: Click button when the contact has created the password and account has been activated. </li></ol></p><p><b><u>USAGE SOURCE STATUS</u></b> <i style="color: #ff9090;font-weight: bold;">(Based on contact created date)</i><ol><li><b>EMPTY</b>: No Account has been created.</li><li><b>NO USAGE</b>: No usage from the time the contact has been created.</li><li><b>DIGITAL LABEL</b>: Manual Barcodes have not been used from the time the contact has been created. </li><li><b>MANUAL BARCODES</b>: Manual Barcodes have been used from the time the contact has been created. </li></ol></p></div></br>'
                 } else {
-                    inlineHtml += '<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p><b><u>STATUS</u></b><ol><li><b>EMPTY</b>: No Account has been created.</li><li><b>NO USAGE</b>: No usage from the time the contact has been created.</li><li><b>NO MANUAL BARCODES</b>: Manual Barcodes have not been used from the time the contact has been created. </li><li><b>MANUAL BARCODES USED</b>: Manual Barcodes have been used from the time the contact has been created. </li></ol></p></div></br>'
+                    inlineHtml += '<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p><b><u>USAGE SOURCE STATUS</u></b> <i style="color: #ff9090;font-weight: bold;">(Based on contact created date)</i><ol><li><b>EMPTY</b>: No Account has been created.</li><li><b>NO USAGE</b>: No usage from the time the contact has been created.</li><li><b>DIGITAL LABEL</b>: Manual Barcodes have not been used from the time the contact has been created. </li><li><b>MANUAL BARCODES</b>: Manual Barcodes have been used from the time the contact has been created. </li></ol></p></div></br>'
                 }
 
                 //Search: SMC - Franchisees
@@ -144,9 +168,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 inlineHtml +=
                     '<div class="col-xs-2"></div>'
                 inlineHtml +=
-                    '<div class="col-xs-4"><input type="button" value="APPLY FILTER" class="form-control btn btn-primary" id="applyFilter" style="background-color: #095C7B;" /></div>'
+                    '<div class="col-xs-4"><input type="button" value="APPLY FILTER" class="form-control btn btn-primary button-shadow" id="applyFilter" style="background-color: #095C7B;" /></div>'
                 inlineHtml +=
-                    '<div class="col-xs-4"><input type="button" value="CLEAR FILTER" class="form-control btn btn-primary" id="clearFilter" style="background-color: #F0AECB; color: #103d39;" /></div>'
+                    '<div class="col-xs-4"><input type="button" value="CLEAR FILTER" class="form-control btn btn-primary button-shadow" id="clearFilter" style="background-color: #F0AECB; color: #103d39;" /></div>'
                 inlineHtml +=
                     '<div class="col-xs-2"></div>'
 
@@ -165,10 +189,72 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                     layoutType: ui.FieldLayoutType.STARTROW
                 }).defaultValue = inlineHtml;
 
+                form.addSubmitButton({ label: '' });
+
                 form.clientScriptFileId = 6393001;
 
                 context.response.writePage(form);
             } else {
+                var customer_id = context.request.parameters.custpage_customer_id;
+                var sales_rep_id = context.request.parameters.custpage_sales_rep_id;
+                var contact_id = context.request.parameters.custpage_contact_id;
+                var contact_fname = context.request.parameters.custpage_contact_fname;
+                var contact_lname = context.request.parameters.custpage_contact_lname;
+                var contact_email = context.request.parameters.custpage_contact_email;
+                var contact_phone = context.request.parameters.custpage_contact_phone;
+                var custpage_salesrecordid = context.request.parameters.custpage_salesrecordid;
+
+                log.debug({
+                    title: 'customer_id',
+                    details: customer_id
+                });
+
+                log.debug({
+                    title: 'contact_fname',
+                    details: contact_fname
+                });
+
+                log.debug({
+                    title: 'contact_lname',
+                    details: contact_lname
+                });
+
+                log.debug({
+                    title: 'contact_email',
+                    details: contact_email
+                });
+
+                log.debug({
+                    title: 'contact_phone',
+                    details: contact_phone
+                });
+
+
+
+                params = {
+                    custscript_cust_internal_id: customer_id,
+                    custscript_contact_internal_id: contact_id,
+                    custscript_contact_fname: contact_fname,
+                    custscript_conatct_lname: contact_lname,
+                    custscript_contact_email: contact_email,
+                    custscript_contact_phone: contact_phone
+                };
+                var reschedule = task.create({
+                    taskType: task.TaskType.SCHEDULED_SCRIPT,
+                    scriptId: 'customscript_ss_send_portal_password_ema',
+                    deploymentId: 'customdeploy1',
+                    params: params
+                });
+
+                var reschedule_id = reschedule.submit();
+
+                redirect.toSuitelet({
+                    scriptId: 'customscript_sl2_contact_manual_migratio',
+                    deploymentId: 'customdeploy1',
+                    parameters: {}
+                });
+
+
             }
         }
 
