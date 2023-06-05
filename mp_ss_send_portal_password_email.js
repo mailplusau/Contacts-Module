@@ -76,7 +76,7 @@ function sendCreatePasswordEmail() {
                 if (accountActivated == true) {
                     var recContact = nlapiLoadRecord('contact', contactInternalId);
                     recContact.setFieldValue('custentity_password_setup_completed', 1);
-                    recContact.setFieldValue('custentity_create_password_email_count', (createPasswordEmailCount+1));
+                    recContact.setFieldValue('custentity_create_password_email_count', createPasswordEmailCount);
                     nlapiSubmitRecord(recContact);
                 } else {
                     var recContact = nlapiLoadRecord('contact', contactInternalId);
@@ -141,7 +141,7 @@ function sendCreatePasswordEmail() {
             if (accountActivated == true) {
                 var recContact = nlapiLoadRecord('contact', contactInternalId);
                 recContact.setFieldValue('custentity_password_setup_completed', 1);
-                recContact.setFieldValue('custentity_create_password_email_count',  (createPasswordEmailCount+1));
+                recContact.setFieldValue('custentity_create_password_email_count',  createPasswordEmailCount);
                 nlapiSubmitRecord(recContact);
             } else {
                 var recContact = nlapiLoadRecord('contact', contactInternalId);

@@ -316,8 +316,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                         $('td', row).css('background-color', '#adcf9f');
                     } else if (data[9] == 'Yes' && data[11] != 'Yes') {
                         if (parseInt(data[10]) >= 4) {
-                            $('td', row).css('background-color', '#e86253');
+                            $('td', row).css('background-color', '#DB6C79');
                             $('td', row).css('font-weight', 'bold');
+                            $(row).css('outline', 'auto');
                         } else {
                             $('td', row).css('background-color', '#ffd7a5');
                         }
@@ -416,10 +417,18 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     join: "contact",
                 });
 
+                if (isNullorEmpty(contactCreatePasswordEmailCount)) {
+                    contactCreatePasswordEmailCount = 0;
+                }
+
                 if (contactPasswordSetupCompleted == 1) {
                     contactPasswordSetupCompleted = 'Yes'
                 } else {
                     contactPasswordSetupCompleted = ''
+                }
+
+                if (contactCreatePasswordEmailCount == 0 && contactCreatePasswordEmail == 'Yes' && contactPasswordSetupCompleted == 'Yes') {
+                    contactCreatePasswordEmailCount = 1;
                 }
 
 
@@ -591,7 +600,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                     } else if (customerContactListRow.contactCreatePasswordEmail == 'Yes' && customerContactListRow.contactPasswordSetupCompleted != 'Yes') {
                         var linkURL = ''
-                        var currentStatus = ''
+                        var currentStatus = '';
+                        
                         if (role == 3 || role == 1032) { //Administrator or System Support
                             linkURL =
                                 '<input type="button" id="" data-id="' +
@@ -671,7 +681,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                     customerContactListDataSet.push([linkURL,
                         customerIDLink,
-                        customerContactListRow.custName, customerContactListRow.zeeName, contactCreatedDateSplitString, contactIdLink, customerContactListRow.contactName, sendSignUpEmail, customerContactListRow.contactPhone, customerContactListRow.contactCreatePasswordEmail, customerContactListRow.contactCreatePasswordEmailCount, customerContactListRow.contactPasswordSetupCompleted, currentStatus
+                        customerContactListRow.custName, customerContactListRow.zeeName, contactCreatedDateSplitString, contactIdLink, customerContactListRow.contactName, sendSignUpEmail, customerContactListRow.contactPhone, customerContactListRow.contactCreatePasswordEmail, parseInt(customerContactListRow.contactCreatePasswordEmailCount), customerContactListRow.contactPasswordSetupCompleted, currentStatus
                     ]);
 
                     csvSet.push([customerContactListRow.custInternalID,
