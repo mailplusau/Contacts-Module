@@ -32,7 +32,8 @@ function sendCreatePasswordEmail() {
 
     if (isNullorEmpty(customerInternalId)) {
         var contactCreatePasswordEmailSentSearch = nlapiLoadSearch('customer', 'customsearch_cust_contact_mail_parcel__2');
-        contactCreatePasswordEmailSentSearch.forEachResult(function (contactCreatePasswordEmailSentSearchResultSet) {
+        var contactCreatePasswordResultSet = contactCreatePasswordEmailSentSearch.runSearch();
+        contactCreatePasswordResultSet.forEachResult(function (contactCreatePasswordEmailSentSearchResultSet) {
 
             customerInternalId = contactCreatePasswordEmailSentSearchResultSet.getValue('internalid');
             contactInternalId = contactCreatePasswordEmailSentSearchResultSet.getValue("internalid", "contact", null);
@@ -75,11 +76,11 @@ function sendCreatePasswordEmail() {
                 if (accountActivated == true) {
                     var recContact = nlapiLoadRecord('contact', contactInternalId);
                     recContact.setFieldValue('custentity_password_setup_completed', 1);
-                    recContact.setFieldValue('custentity_create_password_email_count', createPasswordEmailCount++);
+                    recContact.setFieldValue('custentity_create_password_email_count', (createPasswordEmailCount+1));
                     nlapiSubmitRecord(recContact);
                 } else {
                     var recContact = nlapiLoadRecord('contact', contactInternalId);
-                    recContact.setFieldValue('custentity_create_password_email_count', createPasswordEmailCount++);
+                    recContact.setFieldValue('custentity_create_password_email_count', (createPasswordEmailCount+1));
                     nlapiSubmitRecord(recContact);
 
                     //Create JSON with contact details & customer internal id to be passed to API
@@ -140,11 +141,11 @@ function sendCreatePasswordEmail() {
             if (accountActivated == true) {
                 var recContact = nlapiLoadRecord('contact', contactInternalId);
                 recContact.setFieldValue('custentity_password_setup_completed', 1);
-                recContact.setFieldValue('custentity_create_password_email_count', createPasswordEmailCount++);
+                recContact.setFieldValue('custentity_create_password_email_count',  (createPasswordEmailCount+1));
                 nlapiSubmitRecord(recContact);
             } else {
                 var recContact = nlapiLoadRecord('contact', contactInternalId);
-                recContact.setFieldValue('custentity_create_password_email_count', createPasswordEmailCount++);
+                recContact.setFieldValue('custentity_create_password_email_count',  (createPasswordEmailCount+1));
                 nlapiSubmitRecord(recContact);
                 //Create JSON with contact details & customer internal id to be passed to API
                 var userJSON = '{';
