@@ -315,9 +315,14 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     } else if (data[9] == 'Yes' && data[11] == 'Yes') {
                         $('td', row).css('background-color', '#adcf9f');
                     } else if (data[9] == 'Yes' && data[11] != 'Yes') {
-                        if (parseInt(data[10]) >= 4) {
+                        if (parseInt(data[10]) == 4) {
                             $('td', row).css('background-color', '#DB6C79');
                             $('td', row).css('font-weight', 'bold');
+                            $(row).css('outline', 'auto');
+                        } if (parseInt(data[10]) > 4) { 
+                            $('td', row).css('background-color', '#B31312');
+                            $('td', row).css('font-weight', 'bold');
+                            $('td', row).css('color', 'white');
                             $(row).css('outline', 'auto');
                         } else {
                             $('td', row).css('background-color', '#ffd7a5');

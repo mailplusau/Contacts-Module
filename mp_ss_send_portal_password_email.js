@@ -21,6 +21,7 @@ function sendCreatePasswordEmail() {
     var contactLName = ctx.getSetting('SCRIPT', 'custscript_conatct_lname');
     var contactEmail = ctx.getSetting('SCRIPT', 'custscript_contact_email');
     var contactPhone = ctx.getSetting('SCRIPT', 'custscript_contact_phone');
+    var customerID;
 
     nlapiLogExecution("DEBUG", "customerInternalId", customerInternalId);
     nlapiLogExecution("DEBUG", "contactFName", contactFName);
@@ -36,6 +37,7 @@ function sendCreatePasswordEmail() {
         contactCreatePasswordResultSet.forEachResult(function (contactCreatePasswordEmailSentSearchResultSet) {
 
             customerInternalId = contactCreatePasswordEmailSentSearchResultSet.getValue('internalid');
+            customerID = contactCreatePasswordEmailSentSearchResultSet.getValue('entityid');
             contactInternalId = contactCreatePasswordEmailSentSearchResultSet.getValue("internalid", "contact", null);
             contactFName = contactCreatePasswordEmailSentSearchResultSet.getValue("firstname", "contact", null);
             contactLName = contactCreatePasswordEmailSentSearchResultSet.getValue("lastname", "contact", null);
@@ -80,7 +82,7 @@ function sendCreatePasswordEmail() {
                     nlapiSubmitRecord(recContact);
                 } else {
                     var recContact = nlapiLoadRecord('contact', contactInternalId);
-                    recContact.setFieldValue('custentity_create_password_email_count', (createPasswordEmailCount+1));
+                    recContact.setFieldValue('custentity_create_password_email_count', (createPasswordEmailCount + 1));
                     nlapiSubmitRecord(recContact);
 
                     //Create JSON with contact details & customer internal id to be passed to API
@@ -101,6 +103,23 @@ function sendCreatePasswordEmail() {
                     //Hit RTA API to create new staff
                     nlapiRequestURL('https://mpns.protechly.com/new_staff', userJSON,
                         headers);
+
+                    var emailMerger = nlapiCreateEmailMerger(394);
+
+
+                    // emailHtml = mergeResult.getBody();
+                    // subject = mergeResult.getSubject();
+                    // emailHtml = emailHtml.replace(/<NLEMSALESPERSON>/gi, 'Ankith');
+                    var subject = "Reminder: Set-up your portal";
+                    var mergeResult = emailMerger.merge();
+                    var emailBody = mergeResult.getBody();
+                    emailBody = emailBody.replace(/<NLEMCUSTOMERID>/gi, customerID);
+                    var emailAttach = new Object();
+                    emailAttach['entity'] = customerInternalId;
+
+                    nlapiSendEmail(112209, contactEmail, subject, emailBody,
+                        null,
+                        null, emailAttach, null, true);
                 }
 
             }
@@ -141,11 +160,11 @@ function sendCreatePasswordEmail() {
             if (accountActivated == true) {
                 var recContact = nlapiLoadRecord('contact', contactInternalId);
                 recContact.setFieldValue('custentity_password_setup_completed', 1);
-                recContact.setFieldValue('custentity_create_password_email_count',  createPasswordEmailCount);
+                recContact.setFieldValue('custentity_create_password_email_count', createPasswordEmailCount);
                 nlapiSubmitRecord(recContact);
             } else {
                 var recContact = nlapiLoadRecord('contact', contactInternalId);
-                recContact.setFieldValue('custentity_create_password_email_count',  (createPasswordEmailCount+1));
+                recContact.setFieldValue('custentity_create_password_email_count', (createPasswordEmailCount + 1));
                 nlapiSubmitRecord(recContact);
                 //Create JSON with contact details & customer internal id to be passed to API
                 var userJSON = '{';
@@ -165,6 +184,23 @@ function sendCreatePasswordEmail() {
                 //Hit RTA API to create new staff
                 nlapiRequestURL('https://mpns.protechly.com/new_staff', userJSON,
                     headers);
+
+                var emailMerger = nlapiCreateEmailMerger(394);
+
+
+                // emailHtml = mergeResult.getBody();
+                // subject = mergeResult.getSubject();
+                // emailHtml = emailHtml.replace(/<NLEMSALESPERSON>/gi, 'Ankith');
+                var subject = "Reminder: Set-up your portal";
+                var mergeResult = emailMerger.merge();
+                var emailBody = mergeResult.getBody();
+                emailBody = emailBody.replace(/<NLEMCUSTOMERID>/gi, customerID);
+                var emailAttach = new Object();
+                emailAttach['entity'] = customerInternalId;
+
+                nlapiSendEmail(112209, contactEmail, subject, emailBody,
+                    null,
+                    null, emailAttach, null, true);
             }
 
         }
