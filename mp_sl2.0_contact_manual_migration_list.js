@@ -25,6 +25,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
             userId = runtime.getCurrentUser().id;
 
             role = runtime.getCurrentUser().role;
+            var paramAccountActivated = 2;
+            var paramCustomerType = 1;
 
             if (context.request.method === 'GET') {
 
@@ -32,6 +34,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 var last_date = context.request.parameters.last_date;
                 zee = context.request.parameters.zee;
                 var paramUserId = context.request.parameters.user;
+                paramAccountActivated = context.request.parameters.activated;
+                paramCustomerType = context.request.parameters.type;
 
                 log.debug({
                     title: 'userId',
@@ -39,6 +43,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 });
 
 
+                if (isNullorEmpty(paramCustomerType)) {
+                    paramCustomerType = 2;
+                }
+                if (isNullorEmpty(paramAccountActivated)) {
+                    paramAccountActivated = 2;
+                }
                 if (isNullorEmpty(start_date)) {
                     start_date = null;
                 }
@@ -160,7 +170,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 var resultSetZees = searchZees.run();
 
                 inlineHtml += '<div id="container">'
+                inlineHtml += typeOfCustomer(paramCustomerType);
+                inlineHtml += accountActivatedDropdownSection(paramAccountActivated);
                 inlineHtml += franchiseeDropdownSection(resultSetZees, context);
+                
 
                 inlineHtml +=
                     '<div class="form-group container filter_buttons_section hide">';
@@ -177,8 +190,61 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 inlineHtml += '</div>';
                 inlineHtml += '</div></br></br>';
 
+                // Tabs headers
+                inlineHtml +=
+                    '<style>.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #095c7b; color: #fff }';
+                inlineHtml +=
+                    '.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #095c7b; color: #095c7b; border-radius: 30px;}';
+                inlineHtml += '</style>';
 
-                inlineHtml += dataTable('customer_contact_list');
+                inlineHtml +=
+                    '<div class="tabs_div hide" style="width: 95%; margin:auto; margin-bottom: 30px"><ul class="nav nav-pills nav-justified main-tabs-sections " style="margin:0%; ">';
+                if (paramCustomerType == 1) {
+                    inlineHtml +=
+                    '<li role="presentation" class="active"><a data-toggle="tab" href="#top50"><b>TOP 50</b></a></li>';
+
+                inlineHtml +=
+                    '<li role="presentation" class="hide"><a data-toggle="tab" href="#remaing"><b>REMAINING</b></a></li>';
+                } else {
+                    inlineHtml +=
+                    '<li role="presentation" class="hide"><a data-toggle="tab" href="#top50"><b>TOP 50</b></a></li>';
+
+                inlineHtml +=
+                    '<li role="presentation" class="active"><a data-toggle="tab" href="#remaing"><b>REMAINING</b></a></li>';
+                }    
+               
+
+                inlineHtml += '</ul></div>';
+
+                if (paramCustomerType == 1) {
+                    // Tabs content
+                    inlineHtml += '<div class="tab-content">';
+                    inlineHtml += '<div role="tabpanel" class="tab-pane active" id="top50">';
+                    inlineHtml += dataTable('customer_contact_list');
+                    inlineHtml += '</div>';
+
+                    inlineHtml += '<div role="tabpanel" class="tab-pane" id="remaing">';
+
+                    inlineHtml += dataTable('customer_contact_list_remaining');
+                    inlineHtml += '</div>';
+
+                    inlineHtml += '</div></div>';
+                } else {
+                     // Tabs content
+                     inlineHtml += '<div class="tab-content">';
+                     inlineHtml += '<div role="tabpanel" class="tab-pane " id="top50">';
+                     inlineHtml += dataTable('customer_contact_list');
+                     inlineHtml += '</div>';
+ 
+                     inlineHtml += '<div role="tabpanel" class="tab-pane active" id="remaing">';
+ 
+                     inlineHtml += dataTable('customer_contact_list_remaining');
+                     inlineHtml += '</div>';
+ 
+                     inlineHtml += '</div></div>';
+                }
+
+
                 inlineHtml += '</div>';
 
                 form.addField({
@@ -300,6 +366,74 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
             return inlineHtml;
 
+        }
+
+        function accountActivatedDropdownSection(paramAccountActivated) {
+            var inlineHtml =
+                '<div class="form-group container paramAccountActivated_label_section hide">';
+            inlineHtml += '<div class="row">';
+            inlineHtml +=
+                '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #095C7B;">ACCOUNT ACTIVATED</span></h4></div>';
+            inlineHtml += '</div>';
+            inlineHtml += '</div>';
+
+            inlineHtml += '<div class="form-group container paramAccountActivated_section hide">';
+            inlineHtml += '<div class="row">';
+            // Period dropdown field
+            inlineHtml += '<div class="col-xs-12 paramAccountActivated_dropdown_div">';
+            inlineHtml += '<div class="input-group">';
+            inlineHtml +=
+                '<span class="input-group-addon" id="account_activated_text">Account Activated</span>';
+            inlineHtml += '<select id="paramAccountActivated_dropdown" class="form-control">';
+            if (paramAccountActivated == 1) {
+                inlineHtml += '<option value=""></option>'
+                inlineHtml += '<option value="1" selected>YES</option>'
+                inlineHtml += '<option value="2" >NO</option>'
+            } else {
+                inlineHtml += '<option value=""></option>'
+                inlineHtml += '<option value="1">YES</option>'
+                inlineHtml += '<option value="2" selected>NO</option>'
+            }
+
+
+            inlineHtml += '</select>';
+            inlineHtml += '</div></div></div></div>';
+
+            return inlineHtml;
+        }
+
+        function typeOfCustomer(paramCustomerType) {
+            var inlineHtml =
+                '<div class="form-group container paramAccountActivated_label_section hide">';
+            inlineHtml += '<div class="row">';
+            inlineHtml +=
+                '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #095C7B;">MANUAL CUSTOMER TYPE</span></h4></div>';
+            inlineHtml += '</div>';
+            inlineHtml += '</div>';
+
+            inlineHtml += '<div class="form-group container paramAccountActivated_section hide">';
+            inlineHtml += '<div class="row">';
+            // Period dropdown field
+            inlineHtml += '<div class="col-xs-12 paramAccountActivated_dropdown_div">';
+            inlineHtml += '<div class="input-group">';
+            inlineHtml +=
+                '<span class="input-group-addon" id="account_activated_text">Account Activated</span>';
+            inlineHtml += '<select id="typeOfCustomer_dropdown" class="form-control">';
+            if (paramCustomerType == 1) {
+                inlineHtml += '<option value=""></option>'
+                inlineHtml += '<option value="1" selected>TOP 50</option>'
+                inlineHtml += '<option value="2" >REMAINING</option>'
+            } else {
+                inlineHtml += '<option value=""></option>'
+                inlineHtml += '<option value="1">TOP 50</option>'
+                inlineHtml += '<option value="2" selected>REMAINING</option>'
+            }
+
+
+            inlineHtml += '</select>';
+            inlineHtml += '</div></div></div></div>';
+
+            return inlineHtml;
         }
 
         /**
