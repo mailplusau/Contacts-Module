@@ -16,6 +16,7 @@ var ctx = nlapiGetContext();
 
 function checkAccountActivated() {
 
+    //Customer Contacts - Mail/Parcel Operator Role - Password Email Sent
     var contactCreatePasswordEmailSentSearch = nlapiLoadSearch('customer', 'customsearch_cust_contact_mail_parcel__2');
     var contactCreatePasswordResultSet = contactCreatePasswordEmailSentSearch.runSearch();
     contactCreatePasswordResultSet.forEachResult(function (contactCreatePasswordEmailSentSearchResultSet) {

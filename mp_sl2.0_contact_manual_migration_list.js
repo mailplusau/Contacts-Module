@@ -28,6 +28,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
             var paramAccountActivated = 2;
             var paramCustomerType = 1;
 
+            var paramInitialDisplay = null;
+            var paramFinalDisplay = null;
+
+
+
             if (context.request.method === 'GET') {
 
                 var start_date = context.request.parameters.start_date;
@@ -37,11 +42,37 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 paramAccountActivated = context.request.parameters.activated;
                 paramCustomerType = context.request.parameters.type;
 
+
+                paramInitialDisplay = context.request.parameters.intial;
+                paramFinalDisplay = context.request.parameters.final;
+
                 log.debug({
-                    title: 'userId',
-                    details: userId
+                    title: 'paramInitialDisplay',
+                    details: paramInitialDisplay
                 });
 
+                log.debug({
+                    title: 'paramFinalDisplay',
+                    details: paramFinalDisplay
+                });
+
+                if (isNullorEmpty(paramInitialDisplay)) {
+                    paramInitialDisplay = null;
+                }
+
+                if (isNullorEmpty(paramFinalDisplay)) {
+                    paramFinalDisplay = null;
+                }
+
+                log.debug({
+                    title: 'paramInitialDisplay',
+                    details: paramInitialDisplay
+                });
+
+                log.debug({
+                    title: 'paramFinalDisplay',
+                    details: paramFinalDisplay
+                });
 
                 if (isNullorEmpty(paramCustomerType)) {
                     paramCustomerType = 2;
@@ -155,6 +186,30 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                     displayType: ui.FieldDisplayType.HIDDEN
                 })
 
+                form.addField({
+                    id: 'custpage_initialdisplaylist',
+                    type: ui.FieldType.TEXT,
+                    label: 'Table CSV'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                }).defaultValue = paramInitialDisplay
+
+                form.addField({
+                    id: 'custpage_displaylist',
+                    type: ui.FieldType.TEXT,
+                    label: 'Table CSV'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                }).defaultValue = paramFinalDisplay
+
+                form.addField({
+                    id: 'custpage_totalcontactlist',
+                    type: ui.FieldType.TEXT,
+                    label: 'Table CSV'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                })
+
                 //Loading Section that gets displayed when the page is being loaded
                 inlineHtml += loadingSection();
                 if (role == 3 || role == 1032) {
@@ -172,8 +227,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 inlineHtml += '<div id="container">'
                 inlineHtml += typeOfCustomer(paramCustomerType);
                 inlineHtml += accountActivatedDropdownSection(paramAccountActivated);
+                inlineHtml += displayList();
                 inlineHtml += franchiseeDropdownSection(resultSetZees, context);
-                
+
 
                 inlineHtml +=
                     '<div class="form-group container filter_buttons_section hide">';
@@ -201,18 +257,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                     '<div class="tabs_div hide" style="width: 95%; margin:auto; margin-bottom: 30px"><ul class="nav nav-pills nav-justified main-tabs-sections " style="margin:0%; ">';
                 if (paramCustomerType == 1) {
                     inlineHtml +=
-                    '<li role="presentation" class="active"><a data-toggle="tab" href="#top50"><b>TOP 50</b></a></li>';
+                        '<li role="presentation" class="active"><a data-toggle="tab" href="#top50"><b>TOP 50</b></a></li>';
 
-                inlineHtml +=
-                    '<li role="presentation" class="hide"><a data-toggle="tab" href="#remaing"><b>REMAINING</b></a></li>';
+                    inlineHtml +=
+                        '<li role="presentation" class="hide"><a data-toggle="tab" href="#remaing"><b>REMAINING</b></a></li>';
                 } else {
                     inlineHtml +=
-                    '<li role="presentation" class="hide"><a data-toggle="tab" href="#top50"><b>TOP 50</b></a></li>';
+                        '<li role="presentation" class="hide"><a data-toggle="tab" href="#top50"><b>TOP 50</b></a></li>';
 
-                inlineHtml +=
-                    '<li role="presentation" class="active"><a data-toggle="tab" href="#remaing"><b>REMAINING</b></a></li>';
-                }    
-               
+                    inlineHtml +=
+                        '<li role="presentation" class="active"><a data-toggle="tab" href="#remaing"><b>REMAINING</b></a></li>';
+                }
+
 
                 inlineHtml += '</ul></div>';
 
@@ -220,6 +276,30 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                     // Tabs content
                     inlineHtml += '<div class="tab-content">';
                     inlineHtml += '<div role="tabpanel" class="tab-pane active" id="top50">';
+                    inlineHtml += '<div class="form-group container paramAccountActivated_section hide">';
+                    inlineHtml += '<div class="row">';
+                    inlineHtml += '<div class="col-xs-4 paramAccountActivated_dropdown_div"></div>';
+                    inlineHtml += '<div class="col-xs-4 paramAccountActivated_dropdown_div">';
+                    // inlineHtml += '';
+                    // inlineHtml +=
+                    //     ';
+                    inlineHtml += '<div class="input-group"><span style="background-color:#F0AECB;color:#085c7b;font-weight:700" class="input-group-addon btn btn-primary displayDecrement">Prev</span><span class="input-group-addon" id="account_activated_text">Contacts Displayed</span><input type="text" class="form-control" id="displayContacts" value="" readonly style="text-align: center;"/><span style="background-color:#085c7b;color:#fff;font-weight:700;text-align:center;" class="input-group-addon btn btn-primary displayIncrement">Next</span></div></div></div>';
+                    // inlineHtml += '<input type="button" class="form-control btn btn-primary col-xs-2" value="-" /><div class="input-group"><span class="input-group-addon" id="account_activated_text">Contacts Displayed</span><input type="text" class="form-control" id="displayContacts" value="" readonly /></div><input type="button" class="form-control btn btn-primary col-xs-2" value="+" />'
+                    inlineHtml += '<div class="col-xs-4 paramAccountActivated_dropdown_div"></div>';
+                    inlineHtml += '</div>';
+                    inlineHtml += '</div>';
+                    inlineHtml += '</div></div></br>';
+                    inlineHtml += '<div class="form-group container customerCountDiv hide">';
+                    inlineHtml += '<div class="row">';
+                    inlineHtml += '<div class="col-xs-4 ">';
+                    inlineHtml += '<div class="input-group"><span class="input-group-addon" id="account_activated_text">No Usage Count</span><input type="text" class="form-control" id="noUsageCount" value="" readonly style="text-align: center;"/></div></div>';
+                    inlineHtml += '<div class="col-xs-4 ">';
+                    inlineHtml += '<div class="input-group"><span class="input-group-addon" id="account_activated_text">Manual Usage Count</span><input type="text" class="form-control" id="manualUsageCount" value="" readonly style="text-align: center;"/></div></div>';
+                    inlineHtml += '<div class="col-xs-4 ">';
+                    inlineHtml += '<div class="input-group"><span class="input-group-addon" id="account_activated_text">Digital Usage Count</span><input type="text" class="form-control" id="digitalUsageCount" value="" readonly style="text-align: center;"/></div></div>';
+                    inlineHtml += '</div>';
+                    inlineHtml += '</div>';
+                    inlineHtml += '</div></div></br></br>';
                     inlineHtml += dataTable('customer_contact_list');
                     inlineHtml += '</div>';
 
@@ -230,18 +310,43 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
                     inlineHtml += '</div></div>';
                 } else {
-                     // Tabs content
-                     inlineHtml += '<div class="tab-content">';
-                     inlineHtml += '<div role="tabpanel" class="tab-pane " id="top50">';
-                     inlineHtml += dataTable('customer_contact_list');
-                     inlineHtml += '</div>';
- 
-                     inlineHtml += '<div role="tabpanel" class="tab-pane active" id="remaing">';
- 
-                     inlineHtml += dataTable('customer_contact_list_remaining');
-                     inlineHtml += '</div>';
- 
-                     inlineHtml += '</div></div>';
+                    // Tabs content
+                    inlineHtml += '<div class="tab-content">';
+                    inlineHtml += '<div role="tabpanel" class="tab-pane " id="top50">';
+                    inlineHtml += dataTable('customer_contact_list');
+                    inlineHtml += '</div>';
+
+                    inlineHtml += '<div role="tabpanel" class="tab-pane active" id="remaing">';
+                    inlineHtml += '<div class="form-group container paramAccountActivated_section hide">';
+                    inlineHtml += '<div class="row">';
+                    inlineHtml += '<div class="col-xs-4 paramAccountActivated_dropdown_div"></div>';
+                    inlineHtml += '<div class="col-xs-4 paramAccountActivated_dropdown_div">';
+                    // inlineHtml += '';
+                    // inlineHtml +=
+                    //     ';
+                    inlineHtml += '<div class="input-group"><span style="background-color:#F0AECB;color:#085c7b;font-weight:700" class="input-group-addon btn btn-primary displayDecrement">Prev</span><span class="input-group-addon" id="account_activated_text">Contacts Displayed</span><input type="text" class="form-control" id="displayContacts" value="" readonly style="text-align: center;"/><span style="background-color:#085c7b;color:#fff;font-weight:700;text-align:center;" class="input-group-addon btn btn-primary displayIncrement">Next</span></div></div></div>';
+                    // inlineHtml += '<input type="button" class="form-control btn btn-primary col-xs-2" value="-" /><div class="input-group"><span class="input-group-addon" id="account_activated_text">Contacts Displayed</span><input type="text" class="form-control" id="displayContacts" value="" readonly /></div><input type="button" class="form-control btn btn-primary col-xs-2" value="+" />'
+                    inlineHtml += '<div class="col-xs-4 paramAccountActivated_dropdown_div"></div>';
+                    inlineHtml += '</div>';
+                    inlineHtml += '</div>';
+                    inlineHtml += '</div></div></br>';
+
+                    inlineHtml += '<div class="form-group container customerCountDiv hide">';
+                    inlineHtml += '<div class="row">';
+                    inlineHtml += '<div class="col-xs-4 ">';
+                    inlineHtml += '<div class="input-group"><span class="input-group-addon" id="account_activated_text">No Usage Count</span><input type="text" class="form-control" id="noUsageCount" value="" readonly style="text-align: center;"/></div></div>';
+                    inlineHtml += '<div class="col-xs-4 ">';
+                    inlineHtml += '<div class="input-group"><span class="input-group-addon" id="account_activated_text">Manual Usage Count</span><input type="text" class="form-control" id="manualUsageCount" value="" readonly style="text-align: center;"/></div></div>';
+                    inlineHtml += '<div class="col-xs-4 ">';
+                    inlineHtml += '<div class="input-group"><span class="input-group-addon" id="account_activated_text">Digital Usage Count</span><input type="text" class="form-control" id="digitalUsageCount" value="" readonly style="text-align: center;"/></div></div>';
+                    inlineHtml += '</div>';
+                    inlineHtml += '</div>';
+                    inlineHtml += '</div></div></br></br>';
+
+                    inlineHtml += dataTable('customer_contact_list_remaining');
+                    inlineHtml += '</div>';
+
+                    inlineHtml += '</div></div>';
                 }
 
 
@@ -417,7 +522,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
             inlineHtml += '<div class="col-xs-12 paramAccountActivated_dropdown_div">';
             inlineHtml += '<div class="input-group">';
             inlineHtml +=
-                '<span class="input-group-addon" id="account_activated_text">Account Activated</span>';
+                '<span class="input-group-addon" id="account_activated_text">Customer Profile</span>';
             inlineHtml += '<select id="typeOfCustomer_dropdown" class="form-control">';
             if (paramCustomerType == 1) {
                 inlineHtml += '<option value=""></option>'
@@ -432,6 +537,49 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
             inlineHtml += '</select>';
             inlineHtml += '</div></div></div></div>';
+
+            return inlineHtml;
+        }
+
+        function displayList() {
+
+            var inlineHtml =
+                '<div class="form-group container paramAccountActivated_label_section hide">';
+            inlineHtml += '<div class="row">';
+            inlineHtml +=
+                '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #095C7B;">NUMBER OF CONTACTS</span></h4></div>';
+            inlineHtml += '</div>';
+            inlineHtml += '</div>';
+
+            inlineHtml += '<div class="form-group container paramAccountActivated_section hide">';
+            inlineHtml += '<div class="row">';
+            // Period dropdown field
+            inlineHtml += '<div class="col-xs-12 paramAccountActivated_dropdown_div">';
+            inlineHtml += '<div class="input-group">';
+            inlineHtml +=
+                '<span class="input-group-addon" id="account_activated_text">Total Contacts</span>';
+            inlineHtml += '<input type="text" class="form-control" id="totalDisplayContacts" value="" readonly style="text-align: center;"/>'
+            inlineHtml += '</div></div>';
+            // inlineHtml += '<div class="col-xs-2 paramAccountActivated_dropdown_div">';
+            // inlineHtml += '<div class="input-group">';
+            // inlineHtml += '<button class="form-control btn btn-primary" onclick="">Prev</button>';
+            // inlineHtml += '</div></div>';
+            // inlineHtml += '<div class="col-xs-6 paramAccountActivated_dropdown_div">';
+            // inlineHtml += '';
+            // inlineHtml +=
+            //     ';
+            // inlineHtml += '<div><div class="pull-left"><button type="button" class="btn btn-primary displayDecrement">Prev</button></div><div><div class="input-group"><span class="input-group-addon" id="account_activated_text">Contacts Displayed</span><input type="text" class="form-control" id="displayContacts" value="" readonly /><span class="input-group-addon btn btn-primary displayIncrement">Next</span></div></div></div>';
+            // inlineHtml += '<input type="button" class="form-control btn btn-primary col-xs-2" value="-" /><div class="input-group"><span class="input-group-addon" id="account_activated_text">Contacts Displayed</span><input type="text" class="form-control" id="displayContacts" value="" readonly /></div><input type="button" class="form-control btn btn-primary col-xs-2" value="+" />'
+            // inlineHtml += '</div>';
+            // inlineHtml += '</div>';
+            // inlineHtml += '<div class="col-xs-2 paramAccountActivated_dropdown_div">';
+            // inlineHtml += '<div class="input-group">';
+            // inlineHtml += '<button class="form-control btn btn-primary" onclick="">Next</button>';
+            // inlineHtml += '</div></div>';
+            inlineHtml += '</div></div>';
+
+
+
 
             return inlineHtml;
         }
