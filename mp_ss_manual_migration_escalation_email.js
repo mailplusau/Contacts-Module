@@ -37,6 +37,7 @@ function sendEscalationEmail() {
     contactEscalationEmailResultSet.forEachResult(function (contactEscalationEmailSearchResultSet) {
 
         customerInternalId = contactEscalationEmailSearchResultSet.getValue('internalid');
+        customerID = contactEscalationEmailSearchResultSet.getValue('entityid');
         contactInternalId = contactEscalationEmailSearchResultSet.getValue("internalid", "contact", null);
         contactFName = contactEscalationEmailSearchResultSet.getValue("firstname", "contact", null);
         contactLName = contactEscalationEmailSearchResultSet.getValue("lastname", "contact", null);
@@ -107,7 +108,7 @@ function sendEscalationEmail() {
                 var subject = "Please complete the set-up of your portal";
                 var mergeResult = emailMerger.merge();
                 var emailBody = mergeResult.getBody();
-                emailBody = emailBody.replace(/<NLEMCUSTOMERID>/gi, customerID);
+                emailBody = emailBody.replace(/<nlemcustomerid>/gi, customerID);
                 var emailAttach = new Object();
                 emailAttach['entity'] = customerInternalId;
 
