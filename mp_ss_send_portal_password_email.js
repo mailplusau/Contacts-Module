@@ -44,6 +44,9 @@ function sendCreatePasswordEmail() {
             contactEmail = contactCreatePasswordEmailSentSearchResultSet.getValue("email", "contact", null);
             contactPhone = contactCreatePasswordEmailSentSearchResultSet.getValue("phone", "contact", null);
 
+            nlapiLogExecution('DEBUG', 'customerID', customerID);
+            nlapiLogExecution('DEBUG', 'contactEmail', contactEmail);
+
 
             var headers = {};
             headers['Content-Type'] = 'application/json';
