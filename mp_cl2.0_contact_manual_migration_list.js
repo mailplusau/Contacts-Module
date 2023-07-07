@@ -855,14 +855,58 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             var customerCountAccountActivated = 0;
 
             if (!isNullorEmpty(customerContactListRows)) {
-                $('#totalDisplayContacts').val(customerContactListRows.length);
+                var customerCountAccountActivated = customerContactListRows.length;
+                $('#totalDisplayContacts').val(customerCountAccountActivated);
                 val1.setValue({
                     fieldId: 'custpage_totalcontactlist',
-                    value: totalDisplayContacts
+                    value: customerCountAccountActivated
                 });
-                customerContactListRows.forEach(function (customerContactListRow, index) {
 
-                    var contactCreatedArray = customerContactListRow.contactCreated.split(' ');
+                var intialDisplay = 0;
+                var displayList = 0;
+
+                if (customerCountAccountActivated <= 30) {
+                    displayList = customerCountAccountActivated;
+                    val1.setValue({
+                        fieldId: 'custpage_displaylist',
+                        value: displayList
+                    });
+                    $('#displayContacts').val(intialDisplay + ' - ' + displayList);
+                } else if (customerCountAccountActivated > 30) {
+                    var initialDisplayNumber = val1.getValue({
+                        fieldId: 'custpage_initialdisplaylist',
+                    });
+                    var finalDisplayListNumber = val1.getValue({
+                        fieldId: 'custpage_displaylist',
+                    });
+                    if (isNullorEmpty(finalDisplayListNumber) || initialDisplayNumber == 0) {
+                        displayList = 30;
+                        val1.setValue({
+                            fieldId: 'custpage_displaylist',
+                            value: displayList
+                        });
+                        $('#displayContacts').val('(' + intialDisplay + ' - ' + displayList + ') / ' + customerCountAccountActivated);
+                    } else if (initialDisplayNumber > 30) {
+                        intialDisplay = initialDisplayNumber - 1;
+                        displayList = finalDisplayListNumber;
+                        val1.setValue({
+                            fieldId: 'custpage_displaylist',
+                            value: displayList
+                        });
+                        $('#displayContacts').val('(' + intialDisplay + ' - ' + displayList + ') / ' + customerCountAccountActivated);
+                    }
+                }
+
+                console.log('intialDisplay: ' + intialDisplay);
+                console.log('displayList: ' + displayList);
+
+                for (var x = intialDisplay; x < displayList; x++) {
+
+                
+
+                    // customerContactListRows.forEach(function (customerContactListRow, index) {
+
+                    var contactCreatedArray = customerContactListRows[x].contactCreated.split(' ');
                     var contactCreatedDateSplit = contactCreatedArray[0].split('/');
 
                     if (parseInt(contactCreatedDateSplit[1]) < 10) {
@@ -875,11 +919,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                     var contactCreatedDateSplitString = contactCreatedDateSplit[2] + '-' + contactCreatedDateSplit[1] + '-' +
                         contactCreatedDateSplit[0];
+                    var usageStartDate = '2023-07-01'
 
                     var date_from = dateISOToNetsuite(contactCreatedDateSplitString);
 
                     console.log('date_from: ' + date_from)
-                    console.log('customerContactListRow.custInternalID: ' + customerContactListRow.custInternalID);
+                    console.log('customerContactListRow.custInternalID: ' + customerContactListRows[x].custInternalID);
 
 
 
@@ -893,9 +938,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     firstDay = GetFormattedDate(firstDay);
                     lastDay = GetFormattedDate(lastDay);
 
-                    var sendSignUpEmail = customerContactListRow.contactEmail;
+                    var sendSignUpEmail = customerContactListRows[x].contactEmail;
 
-                    if (customerContactListRow.contactCreatePasswordEmail == 'Yes' && customerContactListRow.contactPasswordSetupCompleted == 'Yes') {
+                    if (customerContactListRows[x].contactCreatePasswordEmail == 'Yes' && customerContactListRows[x].contactPasswordSetupCompleted == 'Yes') {
 
 
                         //Search Name: All MP Products - Source/Week
@@ -908,7 +953,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                             name: 'internalid',
                             join: 'custrecord_cust_prod_stock_customer',
                             operator: search.Operator.IS,
-                            values: parseInt(customerContactListRow.custInternalID)
+                            values: parseInt(customerContactListRows[x].custInternalID)
                         }));
 
                         mpProductSourcePerWeekSearch.filters.push(search.createFilter({
@@ -921,7 +966,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                             name: 'custrecord_cust_date_stock_used',
                             join: null,
                             operator: search.Operator.ONORAFTER,
-                            values: date_from
+                            values: '01/07/2023'
+                            // values: date_from
                         }));
 
                         customerCountAccountActivated++;
@@ -943,7 +989,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                 name: 'internalid',
                                 join: 'custrecord_cust_prod_stock_customer',
                                 operator: search.Operator.IS,
-                                values: parseInt(customerContactListRow.custInternalID)
+                                values: parseInt(customerContactListRows[x].custInternalID)
                             }));
 
                             mpProductSourcePerWeekSearch.filters.push(search.createFilter({
@@ -956,7 +1002,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                 name: 'custrecord_cust_date_stock_used',
                                 join: null,
                                 operator: search.Operator.ONORAFTER,
-                                values: date_from
+                                values: '01/07/2023'
+                                // values: date_from
                             }));
 
                             console.log('mpProductSourcePerWeekSearch.run(): ' + mpProductSourcePerWeekSearch.run())
@@ -965,48 +1012,52 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                 start: 0,
                                 end: 1
                             });
+                            // contactCreatedDateSplitString = '2023-07-01'
                             if (resultRange.length == 0) {
                                 var currentStatus = 'NO USAGE';
                                 noUsageCustomerCount++;
                                 // var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRow.zeeID + '&custid=' + customerContactListRow.custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class="button-shadow"><i class="fa-solid fa-chart-simple" style="font-size: 25px;color: #337ab7"></i></a>'
-                                var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRow.zeeID + '&custid=' + customerContactListRow.custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
+                                var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRows[x].zeeID + '&custid=' + customerContactListRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
                             } else {
                                 var currentStatus = 'DIGITAL LABEL'
                                 digitalLabelUsageCustomerCount++;
-                                var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRow.zeeID + '&custid=' + customerContactListRow.custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
+                                var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRows[x].zeeID + '&custid=' + customerContactListRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
                             }
 
                         } else {
+                            // contactCreatedDateSplitString = '2023-07-01'
                             var currentStatus = 'MANUAL BARCODES';
                             manualUsageCustomerCount++;
-                            var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRow.zeeID + '&custid=' + customerContactListRow.custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
+                            var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRows[x].zeeID + '&custid=' + customerContactListRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
                         }
 
 
-                    } else if (customerContactListRow.contactCreatePasswordEmail != 'Yes' && customerContactListRow.contactPasswordSetupCompleted != 'Yes') {
-                        var linkURL = ''
-                        var currentStatus = ''
-                        if (role == 3 || role == 1032) { //Administrator or System Support
-                            linkURL =
-                                '<input type="button" id="" data-id="' +
-                                customerContactListRow.contactInternalId +
-                                '" value="CREATE PASSWORD EMAIL SENT" class="form-control btn btn-xs btn-primary createPasswordEmail button-shadow" style="font-weight: bold; cursor: pointer !important;width: fit-content;border-radius: 30px" /> </br><a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRow.zeeID + '&custid=' + customerContactListRow.custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>';
-
-                        } else {
-                            var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRow.zeeID + '&custid=' + customerContactListRow.custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
-                        }
-
-                    } else if (customerContactListRow.contactCreatePasswordEmail == 'Yes' && customerContactListRow.contactPasswordSetupCompleted != 'Yes') {
+                    } else if (customerContactListRows[x].contactCreatePasswordEmail != 'Yes' && customerContactListRows[x].contactPasswordSetupCompleted != 'Yes') {
                         var linkURL = ''
                         var currentStatus = '';
+                        // contactCreatedDateSplitString = '2023-07-01';
+                        if (role == 3 || role == 1032) { //Administrator or System Support
+                            linkURL =
+                                '<input type="button" id="" data-id="' +
+                                customerContactListRows[x].contactInternalId +
+                                '" value="CREATE PASSWORD EMAIL SENT" class="form-control btn btn-xs btn-primary createPasswordEmail button-shadow" style="font-weight: bold; cursor: pointer !important;width: fit-content;border-radius: 30px" /> </br><a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRows[x].zeeID + '&custid=' + customerContactListRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>';
+
+                        } else {
+                            var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRows[x].zeeID + '&custid=' + customerContactListRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
+                        }
+
+                    } else if (customerContactListRows[x].contactCreatePasswordEmail == 'Yes' && customerContactListRows[x].contactPasswordSetupCompleted != 'Yes') {
+                        var linkURL = ''
+                        var currentStatus = '';
+                        // contactCreatedDateSplitString = '2023-07-01';
 
                         if (role == 3 || role == 1032) { //Administrator or System Support
                             linkURL =
                                 '<input type="button" id="" data-id="' +
-                                customerContactListRow.contactInternalId +
-                                '" value="ACTIVATED" class="form-control btn btn-xs btn-success accountActivated button-shadow" style="font-weight: bold; cursor: pointer !important;width: fit-content;border-radius: 30px" /> </br><a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRow.zeeID + '&custid=' + customerContactListRow.custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>';
+                                customerContactListRows[x].contactInternalId +
+                                '" value="ACTIVATED" class="form-control btn btn-xs btn-success accountActivated button-shadow" style="font-weight: bold; cursor: pointer !important;width: fit-content;border-radius: 30px" /> </br><a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRows[x].zeeID + '&custid=' + customerContactListRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>';
 
-                            var franchiseeSalesRepAssigned = nlapiLookupField('customer', parseInt(customerContactListRow.contactInternalId), 'partner.custentity_sales_rep_assigned');
+                            var franchiseeSalesRepAssigned = nlapiLookupField('customer', parseInt(customerContactListRows[x].contactInternalId), 'partner.custentity_sales_rep_assigned');
                             salesRepId = franchiseeSalesRepAssigned;
                             if (franchiseeSalesRepAssigned == '668712') {
                                 salesRepEmail = 'belinda.urbani@mailplus.com.au';
@@ -1024,36 +1075,36 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                             var sendSignUpEmail =
                                 '<a data-id="' +
-                                customerContactListRow.custInternalID +
+                                customerContactListRows[x].custInternalID +
                                 '" data-sales="' +
                                 salesRepId +
                                 '" data-contact="' +
-                                customerContactListRow.contactInternalId +
+                                customerContactListRows[x].contactInternalId +
                                 '" data-contactemail="' +
-                                customerContactListRow.contactEmail +
+                                customerContactListRows[x].contactEmail +
                                 '" data-contactName="' +
-                                customerContactListRow.contactName +
+                                customerContactListRows[x].contactName +
                                 '" data-contactPhone="' +
-                                customerContactListRow.contactPhone +
-                                '" data-salesrecordid="" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class="sendEmail"><button class="button-shadow"><div class="svg-wrapper-1"><div class="svg-wrapper"><svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z" fill="currentColor"></path></svg></div></div><span>Resend</span></button></a></br></br>' + customerContactListRow.contactEmail;
+                                customerContactListRows[x].contactPhone +
+                                '" data-salesrecordid="" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class="sendEmail"><button class="button-shadow"><div class="svg-wrapper-1"><div class="svg-wrapper"><svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z" fill="currentColor"></path></svg></div></div><span>Resend</span></button></a></br></br>' + customerContactListRows[x].contactEmail;
                             // linkURL =
                             //     '<a href="" class="accountActivated button-shadow" style="cursor: pointer !important;" ><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399647&c=1048144&h=RuKYj6ulVT3rxPGWwg3OnnI6wETYrFW3BjGkTbg6dg7ms7wv" style="height: 3em; width: 3em;"></a><input type="button" id="" data-id="' +
                             //     customerContactListRow.contactInternalId +
                             //     '" value="ACTIVATED" class="form-control btn btn-xs btn-success accountActivated button-shadow" style="font-weight: bold; cursor: pointer !important;width: fit-content;border-radius: 30px" /> </br><a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRow.zeeID + '&custid=' + customerContactListRow.custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class="button-shadow"><i class="fa-solid fa-chart-simple" style="font-size: 25px;color: #337ab7"></i></a>';
                         } else {
-                            var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRow.zeeID + '&custid=' + customerContactListRow.custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>';
+                            var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRows[x].zeeID + '&custid=' + customerContactListRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>';
 
                         }
                     }
 
                     var customerIDLink =
                         '<a href="https://1048144.app.netsuite.com/app/common/entity/custjob.nl?id=' +
-                        customerContactListRow.custInternalID + '&whence=" target="_blank"><b>' +
-                        customerContactListRow.custEntityID + '</b></a>';
+                        customerContactListRows[x].custInternalID + '&whence=" target="_blank"><b>' +
+                        customerContactListRows[x].custEntityID + '</b></a>';
                     if (role == 3 || role == 1032) {
                         var contactIdLink =
                             '<a href="https://1048144.app.netsuite.com/app/common/entity/contact.nl?id=' +
-                            customerContactListRow.contactInternalId + '&whence=" target="_blank"><b>Edit Contact</b></a>';
+                            customerContactListRows[x].contactInternalId + '&whence=" target="_blank"><b>Edit Contact</b></a>';
 
                         // var franchiseeSalesRepAssigned = nlapiLookupField('customer', parseInt(customerContactListRow.contactInternalId), 'partner.custentity_sales_rep_assigned');
                         // salesRepId = franchiseeSalesRepAssigned;
@@ -1087,7 +1138,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                         //     customerContactListRow.contactPhone +
                         //     '" data-salesrecordid="" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class="sendEmail"><button><div class="svg-wrapper-1"><div class="svg-wrapper"><svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z" fill="currentColor"></path></svg></div></div><span>Send</span></button></a></br>' + customerContactListRow.contactEmail;
                     } else {
-                        var contactIdLink = customerContactListRow.contactInternalId;
+                        var contactIdLink = customerContactListRows[x].contactInternalId;
                         // var sendSignUpEmail = customerContactListRow.contactEmail;
                     }
 
@@ -1095,13 +1146,14 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                     customerContactListDataSet.push([linkURL,
                         customerIDLink,
-                        customerContactListRow.custName, customerContactListRow.zeeName, contactCreatedDateSplitString, contactIdLink, customerContactListRow.contactName, sendSignUpEmail, customerContactListRow.contactPhone, customerContactListRow.contactCreatePasswordEmail, parseInt(customerContactListRow.contactCreatePasswordEmailCount), customerContactListRow.contactPasswordSetupCompleted, currentStatus
+                        customerContactListRows[x].custName, customerContactListRows[x].zeeName, contactCreatedDateSplitString, contactIdLink, customerContactListRows[x].contactName, sendSignUpEmail, customerContactListRows[x].contactPhone, customerContactListRows[x].contactCreatePasswordEmail, parseInt(customerContactListRows[x].contactCreatePasswordEmailCount), customerContactListRows[x].contactPasswordSetupCompleted, currentStatus
                     ]);
 
-                    csvSet.push([customerContactListRow.custInternalID,
-                    customerContactListRow.custName, customerContactListRow.zeeName, contactCreatedDateSplitString, customerContactListRow.contactInternalId, customerContactListRow.contactName, customerContactListRow.contactEmail, customerContactListRow.contactPhone, customerContactListRow.contactCreatePasswordEmail, customerContactListRow.contactCreatePasswordEmailCount, customerContactListRow.contactPasswordSetupCompleted
+                    csvSet.push([customerContactListRows[x].custInternalID,
+                        customerContactListRows[x].custName, customerContactListRows[x].zeeName, contactCreatedDateSplitString, customerContactListRows[x].contactInternalId, customerContactListRows[x].contactName, customerContactListRows[x].contactEmail, customerContactListRows[x].contactPhone, customerContactListRows[x].contactCreatePasswordEmail, customerContactListRows[x].contactCreatePasswordEmailCount, customerContactListRows[x].contactPasswordSetupCompleted
                     ]);
-                });
+                    // });
+                }
             }
 
             var datatable = $('#mpexusage-customer_contact_list').DataTable();
@@ -1180,6 +1232,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                     var contactCreatedDateSplitString = contactCreatedDateSplit[2] + '-' + contactCreatedDateSplit[1] + '-' +
                         contactCreatedDateSplit[0];
+                    var usageStartDate = '2023-07-01'
 
                     var date_from = dateISOToNetsuite(contactCreatedDateSplitString);
 
@@ -1227,7 +1280,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                             name: 'custrecord_cust_date_stock_used',
                             join: null,
                             operator: search.Operator.ONORAFTER,
-                            values: date_from
+                            values: '01/07/2023'
+                            // values: date_from
                         }));
 
                         customerCountRemainingAccountActivated++;
@@ -1262,7 +1316,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                 name: 'custrecord_cust_date_stock_used',
                                 join: null,
                                 operator: search.Operator.ONORAFTER,
-                                values: date_from
+                                values: '01/07/2023'
+                                // values: date_from
                             }));
 
                             console.log('mpProductSourcePerWeekSearch.run(): ' + mpProductSourcePerWeekSearch.run())
@@ -1271,46 +1326,49 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                                 start: 0,
                                 end: 1
                             });
+                            // contactCreatedDateSplitString = '2023-07-01'
                             if (resultRange.length == 0) {
                                 var currentStatus = 'NO USAGE';
                                 noUsageCustomerCount++;
                                 // var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRow.zeeID + '&custid=' + customerContactListRow.custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class="button-shadow"><i class="fa-solid fa-chart-simple" style="font-size: 25px;color: #337ab7"></i></a>'
-                                var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
+                                var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
                             } else {
                                 var currentStatus = 'DIGITAL LABEL'
                                 digitalLabelUsageCustomerCount++;
-                                var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
+                                var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
                             }
 
                         } else {
                             var currentStatus = 'MANUAL BARCODES';
                             manualUsageCustomerCount++;
-                            var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
+                            // contactCreatedDateSplitString = '2023-07-01'
+                            var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
                         }
 
 
                     } else if (customerContactListRemainingRows[x].contactCreatePasswordEmail != 'Yes' && customerContactListRemainingRows[x].contactPasswordSetupCompleted != 'Yes') {
                         var linkURL = ''
                         var currentStatus = ''
+                        // contactCreatedDateSplitString = '2023-07-01'
                         if (role == 3 || role == 1032) { //Administrator or System Support
                             linkURL =
                                 '<input type="button" id="" data-id="' +
                                 customerContactListRemainingRows[x].contactInternalId +
-                                '" value="CREATE PASSWORD EMAIL SENT" class="form-control btn btn-xs btn-primary createPasswordEmail button-shadow" style="font-weight: bold; cursor: pointer !important;width: fit-content;border-radius: 30px" /> </br><a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>';
+                                '" value="CREATE PASSWORD EMAIL SENT" class="form-control btn btn-xs btn-primary createPasswordEmail button-shadow" style="font-weight: bold; cursor: pointer !important;width: fit-content;border-radius: 30px" /> </br><a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>';
 
                         } else {
-                            var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
+                            var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>'
                         }
 
                     } else if (customerContactListRemainingRows[x].contactCreatePasswordEmail == 'Yes' && customerContactListRemainingRows[x].contactPasswordSetupCompleted != 'Yes') {
                         var linkURL = ''
                         var currentStatus = '';
-
+                        // contactCreatedDateSplitString = '2023-07-01'
                         if (role == 3 || role == 1032) { //Administrator or System Support
                             linkURL =
                                 '<input type="button" id="" data-id="' +
                                 customerContactListRemainingRows[x].contactInternalId +
-                                '" value="ACTIVATED" class="form-control btn btn-xs btn-success accountActivated button-shadow" style="font-weight: bold; cursor: pointer !important;width: fit-content;border-radius: 30px" /> </br><a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>';
+                                '" value="ACTIVATED" class="form-control btn btn-xs btn-success accountActivated button-shadow" style="font-weight: bold; cursor: pointer !important;width: fit-content;border-radius: 30px" /> </br><a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>';
 
                             var franchiseeSalesRepAssigned = nlapiLookupField('customer', parseInt(customerContactListRemainingRows[x].contactInternalId), 'partner.custentity_sales_rep_assigned');
                             salesRepId = franchiseeSalesRepAssigned;
@@ -1347,7 +1405,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                             //     customerContactListRow.contactInternalId +
                             //     '" value="ACTIVATED" class="form-control btn btn-xs btn-success accountActivated button-shadow" style="font-weight: bold; cursor: pointer !important;width: fit-content;border-radius: 30px" /> </br><a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRow.zeeID + '&custid=' + customerContactListRow.custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class="button-shadow"><i class="fa-solid fa-chart-simple" style="font-size: 25px;color: #337ab7"></i></a>';
                         } else {
-                            var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + contactCreatedDateSplitString + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>';
+                            // contactCreatedDateSplitString = '2023-07-01'
+                            var linkURL = '<a href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1712&deploy=1&start_date=' + usageStartDate + '&last_date=' + lastDay + '&zee=' + customerContactListRemainingRows[x].zeeID + '&custid=' + customerContactListRemainingRows[x].custInternalID + '&freq=daily" target="_blank" style="font-weight: bold; cursor: pointer !important;width: 50%;border-radius: 30px;padding: 2.5%;" class=""><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6399648&c=1048144&h=IV0eZcpDJAJvpDCshlu59Ny5BQ1HZwqvu2FIRmE9CZHL8AN3" style="height: 3em; width: 3em;"></a>';
 
                         }
                     }

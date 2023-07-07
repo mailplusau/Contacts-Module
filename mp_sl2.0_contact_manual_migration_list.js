@@ -303,18 +303,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                     inlineHtml += dataTable('customer_contact_list');
                     inlineHtml += '</div>';
 
-                    inlineHtml += '<div role="tabpanel" class="tab-pane" id="remaing">';
+                    // inlineHtml += '<div role="tabpanel" class="tab-pane" id="remaing">';
 
-                    inlineHtml += dataTable('customer_contact_list_remaining');
-                    inlineHtml += '</div>';
+                    // inlineHtml += dataTable('customer_contact_list_remaining');
+                    // inlineHtml += '</div>';
 
                     inlineHtml += '</div></div>';
                 } else {
                     // Tabs content
-                    inlineHtml += '<div class="tab-content">';
-                    inlineHtml += '<div role="tabpanel" class="tab-pane " id="top50">';
-                    inlineHtml += dataTable('customer_contact_list');
-                    inlineHtml += '</div>';
+                    // inlineHtml += '<div class="tab-content">';
+                    // inlineHtml += '<div role="tabpanel" class="tab-pane " id="top50">';
+                    // inlineHtml += dataTable('customer_contact_list');
+                    // inlineHtml += '</div>';
 
                     inlineHtml += '<div role="tabpanel" class="tab-pane active" id="remaing">';
                     inlineHtml += '<div class="form-group container paramAccountActivated_section hide">';

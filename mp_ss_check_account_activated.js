@@ -27,7 +27,7 @@ function checkAccountActivated() {
         contactLName = contactCreatePasswordEmailSentSearchResultSet.getValue("lastname", "contact", null);
         contactEmail = contactCreatePasswordEmailSentSearchResultSet.getValue("email", "contact", null);
         contactPhone = contactCreatePasswordEmailSentSearchResultSet.getValue("phone", "contact", null);
-        
+
         nlapiLogExecution('DEBUG', 'contactEmail', contactEmail);
 
         var headers = {};
@@ -60,20 +60,28 @@ function checkAccountActivated() {
                 }
             }
 
-            if (accountActivated == true) {
-                var recContact = nlapiLoadRecord('contact', contactInternalId);
-                recContact.setFieldValue('custentity_password_setup_completed', 1);
-                recContact.setFieldValue('custentity_create_password_email', 1);
-                recContact.setFieldValue('custentity_create_password_email_count', createPasswordEmailCount);
-                nlapiSubmitRecord(recContact);
+            try {
+                if (accountActivated == true) {
+                    var recContact = nlapiLoadRecord('contact', contactInternalId);
+                    recContact.setFieldValue('custentity_password_setup_completed', 1);
+                    recContact.setFieldValue('custentity_create_password_email', 1);
+                    recContact.setFieldValue('custentity_create_password_email_count', createPasswordEmailCount);
+                    nlapiSubmitRecord(recContact);
+                }
+
+                if (createPasswordEmailCount > 0) {
+                    var recContact = nlapiLoadRecord('contact', contactInternalId);
+                    recContact.setFieldValue('custentity_create_password_email', 1);
+                    recContact.setFieldValue('custentity_create_password_email_count', createPasswordEmailCount);
+                    nlapiSubmitRecord(recContact);
+                }
+            } catch (error) {
+                var emailBody = 'email: ' + contactEmail;
+                emailBody += '\n Customer Internal ID: ' + customerInternalId
+                nlapiLogExecution('ERROR', 'error', error);
+                nlapiSendEmail(409635, 409635, "Check Account Activated Script - Error", emailBody);
             }
 
-            if (createPasswordEmailCount > 0) {
-                var recContact = nlapiLoadRecord('contact', contactInternalId);
-                recContact.setFieldValue('custentity_create_password_email', 1);
-                recContact.setFieldValue('custentity_create_password_email_count', createPasswordEmailCount);
-                nlapiSubmitRecord(recContact);
-            }
 
         }
 
