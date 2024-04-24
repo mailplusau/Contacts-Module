@@ -107,7 +107,7 @@ function sendCreatePasswordEmail() {
                     nlapiRequestURL('https://mpns.protechly.com/new_staff', userJSON,
                         headers);
 
-                    var emailMerger = nlapiCreateEmailMerger(394);
+                    // var emailMerger = nlapiCreateEmailMerger(394);
 
 
                     // emailHtml = mergeResult.getBody();
@@ -188,7 +188,7 @@ function sendCreatePasswordEmail() {
                 nlapiRequestURL('https://mpns.protechly.com/new_staff', userJSON,
                     headers);
 
-                var emailMerger = nlapiCreateEmailMerger(394);
+                // var emailMerger = nlapiCreateEmailMerger(394);
 
 
                 // emailHtml = mergeResult.getBody();
