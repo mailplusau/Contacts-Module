@@ -26,6 +26,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
 
             if (context.request.method === 'GET') {
 
+                log.debug({
+                    title: 'context.request.parameters',
+                    details: context.request.parameters
+                })
+
                 var custinternalid = context.request.parameters.custinternalid;
                 var contactid = context.request.parameters.contactid;
 
@@ -41,21 +46,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record', 'N/
                 });
 
                 contactRecord.setValue({
-                    fieldId: 'custentity_create_password_email',
-                    value: 1
+                    fieldId: 'custentity_subscribe_list',
+                    value: 2
                 });
 
                 contactRecord.save();
-
-
-                form.addField({
-                    id: 'preview_table',
-                    label: 'inlinehtml',
-                    type: 'inlinehtml'
-                }).updateLayoutType({
-                    layoutType: ui.FieldLayoutType.STARTROW
-                }).defaultValue = inlineHtml;
-
 
                 context.response.writePage(form);
             } else {
