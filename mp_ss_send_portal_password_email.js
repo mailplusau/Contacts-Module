@@ -113,16 +113,16 @@ function sendCreatePasswordEmail() {
                     // emailHtml = mergeResult.getBody();
                     // subject = mergeResult.getSubject();
                     // emailHtml = emailHtml.replace(/<NLEMSALESPERSON>/gi, 'Ankith');
-                    var subject = "Reminder: Set-up your portal";
-                    var mergeResult = emailMerger.merge();
-                    var emailBody = mergeResult.getBody();
-                    emailBody = emailBody.replace(/<NLEMCUSTOMERID>/gi, customerID);
-                    var emailAttach = new Object();
-                    emailAttach['entity'] = customerInternalId;
+                    // var subject = "Reminder: Set-up your portal";
+                    // var mergeResult = emailMerger.merge();
+                    // var emailBody = mergeResult.getBody();
+                    // emailBody = emailBody.replace(/<NLEMCUSTOMERID>/gi, customerID);
+                    // var emailAttach = new Object();
+                    // emailAttach['entity'] = customerInternalId;
 
-                    nlapiSendEmail(112209, contactEmail, subject, emailBody,
-                        null,
-                        null, emailAttach, null, true);
+                    // nlapiSendEmail(112209, contactEmail, subject, emailBody,
+                    //     null,
+                    //     null, emailAttach, null, true);
                 }
 
             }
@@ -194,16 +194,16 @@ function sendCreatePasswordEmail() {
                 // emailHtml = mergeResult.getBody();
                 // subject = mergeResult.getSubject();
                 // emailHtml = emailHtml.replace(/<NLEMSALESPERSON>/gi, 'Ankith');
-                var subject = "Reminder: Set-up your portal";
-                var mergeResult = emailMerger.merge();
-                var emailBody = mergeResult.getBody();
-                emailBody = emailBody.replace(/<NLEMCUSTOMERID>/gi, customerID);
-                var emailAttach = new Object();
-                emailAttach['entity'] = customerInternalId;
+                // var subject = "Reminder: Set-up your portal";
+                // var mergeResult = emailMerger.merge();
+                // var emailBody = mergeResult.getBody();
+                // emailBody = emailBody.replace(/<NLEMCUSTOMERID>/gi, customerID);
+                // var emailAttach = new Object();
+                // emailAttach['entity'] = customerInternalId;
 
-                nlapiSendEmail(112209, contactEmail, subject, emailBody,
-                    null,
-                    null, emailAttach, null, true);
+                // nlapiSendEmail(112209, contactEmail, subject, emailBody,
+                //     null,
+                //     null, emailAttach, null, true);
             }
 
         }
