@@ -70,7 +70,7 @@ function sendEscalationEmail() {
             for (var x = 0; x < emailSubjectsLength; x++) {
                 if (emailSubjects[x].subject == 'Welcome to your MailPlus Shipping Portal.') {
                     accountActivated = true;
-                } else if (emailSubjects[x].subject == 'Your MailPlus shipping portal is now ready for you to set up.') {
+                } else if (emailSubjects[x].subject == 'Your MailPlus shipping portal is now ready for you to set up.' || emailSubjects[x].subject == 'Create Your ShipMate Password Now') {
                     createPasswordEmailCount++;
                 }
             }
@@ -147,7 +147,7 @@ function sendEscalationEmail() {
     //         for (var x = 0; x < emailSubjectsLength; x++) {
     //             if (emailSubjects[x].subject == 'Welcome to your MailPlus Shipping Portal.') {
     //                 accountActivated = true;
-    //             } else if (emailSubjects[x].subject == 'Your MailPlus shipping portal is now ready for you to set up.') {
+    //             } else if (emailSubjects[x].subject == 'Your MailPlus shipping portal is now ready for you to set up.' || emailSubjects[x].subject == 'Create Your ShipMate Password Now') {
     //                 createPasswordEmailCount++;
     //             }
     //         }

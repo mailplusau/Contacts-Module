@@ -71,13 +71,14 @@ function sendCreatePasswordEmail() {
                 var createPasswordEmailCount = 0;
 
                 for (var x = 0; x < emailSubjectsLength; x++) {
+                    nlapiLogExecution('DEBUG', 'emailSubjects[x].subject', emailSubjects[x].subject);
                     if (emailSubjects[x].subject == 'Welcome to your MailPlus Shipping Portal.') {
                         accountActivated = true;
-                    } else if (emailSubjects[x].subject == 'Your MailPlus shipping portal is now ready for you to set up.') {
+                    } else if (emailSubjects[x].subject == 'Your MailPlus shipping portal is now ready for you to set up.' || emailSubjects[x].subject == 'Create Your ShipMate Password Now') {
                         createPasswordEmailCount++;
                     }
                 }
-
+                nlapiLogExecution('DEBUG', 'accountActivated', accountActivated);
                 if (accountActivated == true) {
                     var recContact = nlapiLoadRecord('contact', contactInternalId);
                     recContact.setFieldValue('custentity_password_setup_completed', 1);
@@ -155,7 +156,7 @@ function sendCreatePasswordEmail() {
             for (var x = 0; x < emailSubjectsLength; x++) {
                 if (emailSubjects[x].subject == 'Welcome to your MailPlus Shipping Portal.') {
                     accountActivated = true;
-                } else if (emailSubjects[x].subject == 'Your MailPlus shipping portal is now ready for you to set up.') {
+                } else if (emailSubjects[x].subject == 'Your MailPlus shipping portal is now ready for you to set up.' || emailSubjects[x].subject == 'Create Your ShipMate Password Now') {
                     createPasswordEmailCount++;
                 }
             }
